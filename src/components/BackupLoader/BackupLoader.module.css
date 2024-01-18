@@ -1,0 +1,11 @@
+.loaderWindow {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+
+  background-color: white;
+  width: 400px;
+  height: 200px;
+
+  padding: 20px;
+}
