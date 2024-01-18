@@ -18,6 +18,7 @@ import { Container } from "@mui/material";
 import RouterIcon from "@mui/icons-material/Router";
 import MiscellaneousServicesIcon from "@mui/icons-material/MiscellaneousServices";
 import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
+import { ToastContainer } from "react-toastify";
 
 const drawerWidth = 240;
 
@@ -68,7 +69,25 @@ function SharedLayout(props) {
           primary="Магазин"
           icon={<ShoppingCartIcon />}
         />
+        <ListItemLink
+          to="/components"
+          primary="Компоненти"
+          icon={<ShoppingCartIcon />}
+        />
       </List>
+      <ToastContainer
+        position="top-right"
+        autoClose={5000}
+        hideProgressBar={false}
+        newestOnTop={false}
+        closeOnClick
+        rtl={false}
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
+        theme="light"
+      />
+      <ToastContainer />
     </div>
   );
 

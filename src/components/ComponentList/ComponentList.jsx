@@ -1,54 +1,52 @@
-import * as React from "react";
-import Card from "@mui/material/Card";
-import CardActions from "@mui/material/CardActions";
-import CardContent from "@mui/material/CardContent";
-import CardMedia from "@mui/material/CardMedia";
-import Button from "@mui/material/Button";
-import Typography from "@mui/material/Typography";
-import { Grid, IconButton } from "@mui/material";
+import {
+  Button,
+  Card,
+  CardActions,
+  CardContent,
+  CardMedia,
+  Grid,
+  IconButton,
+  Typography,
+} from "@mui/material";
+import { NavLink } from "react-router-dom";
+
 import DeleteIcon from "@mui/icons-material/Delete";
 import ModeEditIcon from "@mui/icons-material/ModeEdit";
-import { Link, NavLink } from "react-router-dom";
 
-function ModelsList({ models, onEdit, onDelete }) {
-  const sortedModels = models.sort((firstModel, secondModel) =>
-    firstModel.model.localeCompare(secondModel.model)
-  );
-
+function ComponentList({ components, onEdit, onDelete }) {
   return (
-    <Grid
-      container
-      spacing={{ xs: 2, md: 3 }}
-      columns={{ xs: 4, sm: 8, md: 12 }}
-    >
-      {sortedModels.map((model) => {
+    <Grid container spacing={{ md: 2 }} columns={{ md: 12 }}>
+      {components.map((component) => {
         return (
-          <Grid item xs={2} sm={4} md={3} key={model._id}>
-            <Card sx={{ maxWidth: 345 }}>
+          <Grid item md={1.5} key={component._id}>
+            <Card>
               <CardMedia
                 component="img"
-                alt="router"
-                height="180"
-                image={model.image}
+                alt="component"
+                height="130"
+                image={component.image}
                 sx={{
                   // width: 100,
-                  p: 4,
+                  p: 1,
                   objectFit: "contain",
                 }}
               />
               <CardContent>
-                <Typography gutterBottom variant="h5" component="div">
-                  {model.model}
+                <Typography gutterBottom variant="p" component="div">
+                  {component.mark}
+                </Typography>
+                <Typography gutterBottom variant="p" component="div">
+                  {component.type}
                 </Typography>
               </CardContent>
               <CardActions disableSpacing>
-                <NavLink to={model.id}>
+                <NavLink to={component.id}>
                   <Button size="small">Детальніше</Button>
                 </NavLink>
 
                 <IconButton
                   onClick={() => {
-                    onEdit(model);
+                    onEdit(component);
                   }}
                   aria-label="delete"
                   size="small"
@@ -58,7 +56,7 @@ function ModelsList({ models, onEdit, onDelete }) {
                 </IconButton>
                 <IconButton
                   onClick={() => {
-                    onDelete(model._id);
+                    onDelete(component._id);
                   }}
                   aria-label="delete"
                   size="small"
@@ -74,4 +72,4 @@ function ModelsList({ models, onEdit, onDelete }) {
   );
 }
 
-export default ModelsList;
+export default ComponentList;

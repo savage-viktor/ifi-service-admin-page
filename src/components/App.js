@@ -9,6 +9,8 @@ import Model from "./pages/Model";
 import Login from "./pages/Login";
 import { useSelector } from "react-redux";
 import { getLoginStatus } from "../redux/login/selectors";
+import Components from "./pages/Components";
+import Shop from "./pages/Shop";
 
 function App() {
   const isLogin = useSelector(getLoginStatus);
@@ -19,7 +21,8 @@ function App() {
         <Route index element={<Models />} />
         <Route path="services" element={<Services />} />
         <Route path="messages" element={<Messages />} />
-        <Route path="shop" element={<Messages />} />
+        <Route path="shop" element={<Shop />} />
+        <Route path="components" element={<Components />} />
         <Route path="/:modelId" element={<Model />} />
         <Route path="*" element={<NotFound />} />
       </Route>

@@ -6,15 +6,6 @@ import SelectService from "../SelectService/SelectService";
 import styles from "./AddModelForm.module.css";
 import { useState, useEffect } from "react";
 
-// const availableServiceOptions = (serviceOptions) => {
-//   const options = [];
-//   serviceOptions.map((serviceOption) =>
-//     options.push(serviceOption.description)
-//   );
-//   console.log(options);
-//   return options;
-// };
-
 function AddModelForm({ model, onSubmit }) {
   const [services, setServices] = useState(model.services);
   const [service, setService] = useState();
@@ -249,7 +240,6 @@ function AddModelForm({ model, onSubmit }) {
           </button>
         </Form>
       </Formik>
-      {/* <AddServiceForm handleAddService={handleAddService} /> */}
     </div>
   );
 }

@@ -14,6 +14,7 @@ function FindInput({ onChange }) {
       id="outlined-basic"
       label="Пошук моделі"
       variant="outlined"
+      autoComplete="off"
       onChange={handleInput}
       value={input}
       type="text"

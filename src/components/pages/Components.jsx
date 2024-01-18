@@ -1,56 +1,38 @@
-import { useState, useEffect } from "react";
-import { toast } from "react-toastify";
-import "react-toastify/dist/ReactToastify.css";
-
-// import GetModels from "../../services/GetModels";
-// import SubmitModel from "../../services/SubmitModel";
-// import EditModel from "../../services/EditModel";
-// import DeleteModel from "../../services/DeleteModel";
-
-import {
-  GetModels,
-  SubmitModel,
-  EditModel,
-  DeleteModel,
-} from "../../services/ModelsAPI";
-
-import Loader from "../Loader/Loader";
-import Error from "../Error/Error";
-
-import ModelsList from "../ModelList/ModelList";
-
+import { Button, Grid, Paper } from "@mui/material";
 import FindInput from "../FindInput/FindInput";
-import BackUpButton from "../BackUpButton/BackUpButton";
-import RestoreButton from "../RestoreButton/RestoreButton";
-
-import AddModelForm from "../AddModelForm/AddModelForm";
+import { useEffect, useState } from "react";
 import Modal from "../Modal/Modal";
 import ModalConfirm from "../ModalConfirm/ModalConfirm";
+import Loader from "../Loader/Loader";
+import Error from "../Error/Error";
+import AddComponentForm from "../AddComponentForm/AddComponentForm";
+import {
+  DeleteComponent,
+  EditComponent,
+  GetComponents,
+  SubmitComponent,
+} from "../../services/ComponentsAPI";
+import ComponentList from "../ComponentList/ComponentList";
 import Confirm from "../Confirm/Confirm";
-import BackupLoader from "../BackupLoader/BackupLoader";
-import { Button, Grid, Paper } from "@mui/material";
+import { toast } from "react-toastify";
 
-const initialModel = {
-  vendor: "",
-  model: "",
+const initialComponent = {
+  type: "",
+  mark: "",
   image: "",
-  services: [],
-  details: {
-    type: "",
-    typeOfSim: "",
-    size: "",
-    battery: "",
-    bands: "",
-    antena: "",
-    wifi: "",
-    mobileNetwork: "",
-  },
+  coment: "",
+  size: "",
+  flashMemory: "",
+  flashSpeed: "",
+  flashType: "",
+  dataSheetURL: "",
+  batteryCapacity: "",
 };
 
-function Models() {
+function Components() {
   const [status, setStatus] = useState("idle");
-  const [models, setModels] = useState(false);
-  const [model, setModel] = useState(false);
+  const [components, setComponents] = useState(false);
+  const [component, setComponent] = useState(false);
   const [modal, setModal] = useState(false);
   const [modalConfirm, setModalConfirm] = useState(false);
   const [modalConfirmText, setModalConfirmText] = useState("");
@@ -65,9 +47,9 @@ function Models() {
 
   useEffect(() => {
     setStatus("loading");
-    GetModels()
-      .then((models) => {
-        setModels(models);
+    GetComponents()
+      .then((components) => {
+        setComponents(components);
         setStatus("idle");
       })
       .catch((error) => {
@@ -82,7 +64,13 @@ function Models() {
 
   const handleCloseModal = () => {
     setModal(false);
-    setModel(false);
+    setComponent(false);
+  };
+
+  const handleCloseModalConfirm = () => {
+    setRestoreFile(null);
+    setModalConfirm(false);
+    setLoaderCount(0);
   };
 
   const handleConfirmModal = async () => {
@@ -90,7 +78,7 @@ function Models() {
       case "delete":
         try {
           handleCloseModalConfirm();
-          await DeleteModel(deleteId);
+          await DeleteComponent(deleteId);
           setUpdate((prevState) => prevState + 1);
 
           toast.success("Видалено успішно", {
@@ -123,10 +111,10 @@ function Models() {
           handleCloseModalConfirm();
           handleCloseModal();
 
-          await SubmitModel(model);
+          await SubmitComponent(component);
           setUpdate((prevState) => prevState + 1);
 
-          toast.success("Додано модель успішно", {
+          toast.success("Компонент додано успішно", {
             position: "top-right",
             autoClose: 1000,
             hideProgressBar: true,
@@ -137,7 +125,7 @@ function Models() {
             theme: "colored",
           });
         } catch (error) {
-          toast.error(`Помилка дадавання моделі ${error.message}`, {
+          toast.error(`Помилка дадавання компонента ${error.message}`, {
             position: "top-right",
             autoClose: 1000,
             hideProgressBar: true,
@@ -156,7 +144,7 @@ function Models() {
           handleCloseModalConfirm();
           handleCloseModal();
 
-          await EditModel(model);
+          await EditComponent(component);
           setUpdate((prevState) => prevState + 1);
 
           toast.success("Відредаговано успішно", {
@@ -184,75 +172,22 @@ function Models() {
 
         break;
 
-      case "loadBackup":
-        setLoaderCount(0.1);
-
-        const delay = (ms = 1000) => new Promise((r) => setTimeout(r, ms));
-
-        let needBreak = false;
-
-        const getDataSeries = async (restoreFile) => {
-          for (let index = 0; index < restoreFile.length; index++) {
-            if (needBreak) {
-              setBreakRestore(true);
-              break;
-            }
-
-            setBreakRestore(false);
-
-            await delay();
-            const res = await fetch(
-              "https://www.ifiservice.com.ua/backend/models",
-              {
-                method: "POST",
-                headers: { "content-type": "application/json" },
-                body: JSON.stringify(restoreFile[index]),
-              }
-            )
-              // eslint-disable-next-line no-loop-func
-              .then((res) => {
-                if (!res.ok) {
-                  console.log("помилка 1");
-                  needBreak = true;
-                }
-                setLoaderCount(index + 1);
-              })
-              // eslint-disable-next-line no-loop-func
-              .catch((error) => {
-                console.log("Помилка 2");
-                needBreak = true;
-              });
-
-            console.log(res);
-          }
-
-          return 0;
-        };
-
-        getDataSeries(restoreFile);
-
-        break;
-
       default:
         alert("Помилка типу модального вікна");
     }
   };
 
-  const handleCloseModalConfirm = () => {
-    setRestoreFile(null);
-    setModalConfirm(false);
-    setLoaderCount(0);
-  };
-
-  const handleSubmitModel = (model) => {
-    setModel(model);
-    setModalConfirmType(model._id ? "edit" : "submit");
-    setModalConfirmText(model._id ? "Зберегти зміни?" : "Додати нову модель?");
+  const handleSubmitComponent = (component) => {
+    setComponent(component);
+    setModalConfirmType(component._id ? "edit" : "submit");
+    setModalConfirmText(
+      component._id ? "Зберегти зміни?" : "Додати нову модель?"
+    );
     setModalConfirm(true);
   };
 
-  const handleEditModel = (model) => {
-    setModel(model);
+  const handleEditModel = (component) => {
+    setComponent(component);
     setModalConfirmType("edit");
     setModal(true);
   };
@@ -261,19 +196,6 @@ function Models() {
     setDeleteId(id);
     setModalConfirmType("delete");
     setModalConfirmText("Ви дійсно бажаєте видалити?");
-    setModalConfirm(true);
-  };
-
-  const filterModels = (models) => {
-    return models.filter((model) => {
-      return model.model.toLowerCase().includes(findModel);
-    });
-  };
-
-  const onChooseBackupFile = (file) => {
-    setRestoreFile(file);
-    setModalConfirmType("loadBackup");
-    setModalConfirmText("Відновлення");
     setModalConfirm(true);
   };
 
@@ -294,18 +216,16 @@ function Models() {
             variant="contained"
             sx={{ ml: "auto" }}
           >
-            Додати модель
+            Додати компонент
           </Button>
-          <BackUpButton getQuery={GetModels} name="Моделі" />
-          <RestoreButton onChooseBackupFile={onChooseBackupFile} />
         </Paper>
       </Grid>
 
       {modal && (
         <Modal onClose={handleCloseModal}>
-          <AddModelForm
-            model={model || initialModel}
-            onSubmit={handleSubmitModel}
+          <AddComponentForm
+            component={component || initialComponent}
+            onSubmit={handleSubmitComponent}
           />
         </Modal>
       )}
@@ -320,38 +240,24 @@ function Models() {
               : () => {}
           }
         >
-          {loaderCount > 0 && (
-            <BackupLoader count={loaderCount} length={restoreFile.length}>
-              {breakRestore && <div>Помилка відновлення бази</div>}
-            </BackupLoader>
-          )}
-
           {loaderCount === 0 && (
             <Confirm
               text={modalConfirmText}
               accept={handleConfirmModal}
               decline={handleCloseModalConfirm}
-            >
-              {restoreFile && (
-                <div>
-                  Відновити базу? Буде виконано відновлено {restoreFile.length}
-                  елементів колекції
-                </div>
-              )}
-            </Confirm>
+            ></Confirm>
           )}
         </ModalConfirm>
       )}
 
       {status === "loading" && <Loader />}
-
       {status === "error" && <Error />}
 
-      {models && (
+      {components && (
         <>
-          Всього {filterModels(models).length}
-          <ModelsList
-            models={filterModels(models)}
+          Всього {components.length}
+          <ComponentList
+            components={components}
             onEdit={handleEditModel}
             onDelete={handleDeleteModel}
           />
@@ -360,5 +266,4 @@ function Models() {
     </div>
   );
 }
-
-export default Models;
+export default Components;
