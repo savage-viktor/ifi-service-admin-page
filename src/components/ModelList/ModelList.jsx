@@ -42,7 +42,7 @@ function ModelsList({ models, onEdit, onDelete }) {
                 </Typography>
               </CardContent>
               <CardActions disableSpacing>
-                <NavLink to={model.id}>
+                <NavLink to={model._id}>
                   <Button size="small">Детальніше</Button>
                 </NavLink>
 

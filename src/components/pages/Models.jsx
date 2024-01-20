@@ -34,7 +34,6 @@ const initialModel = {
   vendor: "",
   model: "",
   image: "",
-  services: [],
   details: {
     type: "",
     typeOfSim: "",
@@ -45,6 +44,8 @@ const initialModel = {
     wifi: "",
     mobileNetwork: "",
   },
+  services: [],
+  components: [],
 };
 
 function Models() {

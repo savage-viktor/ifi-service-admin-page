@@ -9,7 +9,6 @@ import {
 } from "@mui/material";
 
 function MessageCard({ message, onDelete }) {
-  console.log(message._id);
   return (
     <Card sx={{ maxWidth: 345 }}>
       <CardContent>

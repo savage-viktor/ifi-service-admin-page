@@ -1,15 +1,24 @@
-import { Formik, Field, Form } from "formik";
+import { Formik, Field, Form, useFormik } from "formik";
 import { GetServices } from "../../services/ServicesAPI";
 
 import SelectService from "../SelectService/SelectService";
 
 import styles from "./AddModelForm.module.css";
 import { useState, useEffect } from "react";
+import { GetComponents } from "../../services/ComponentsAPI";
 
 function AddModelForm({ model, onSubmit }) {
+  // const [serviceIDs, setServiceIDs] = useState(model.services);
+  const [componentMarks] = useState(model.components);
+
   const [services, setServices] = useState(model.services);
-  const [service, setService] = useState();
+  const [components, setComponents] = useState([]);
+
   const [serviceOptions, setServiceOptions] = useState([]);
+  const [componentOptions, setComponentOptions] = useState([]);
+
+  const [service, setService] = useState();
+  const [component, setComponent] = useState("");
 
   useEffect(() => {
     GetServices()
@@ -17,11 +26,38 @@ function AddModelForm({ model, onSubmit }) {
         setServiceOptions(services);
       })
       .catch();
-  }, []);
+    GetComponents()
+      .then((components) => {
+        const options = [];
+        components.map((component) => {
+          return options.push({
+            label: component.mark,
+            value: component._id,
+            ...component,
+          });
+        });
+        setComponentOptions(options);
+
+        const includedComponents = [];
+        componentMarks.map((componentMark) => {
+          return components.map((component) => {
+            if (component.mark === componentMark) {
+              return includedComponents.push(component);
+            }
+            return 0;
+          });
+        });
+        setComponents(includedComponents);
+      })
+      .catch();
+  }, [componentMarks]);
 
   const handleInputService = (value) => {
-    console.log(value);
     setService(value);
+  };
+
+  const handleInputComponent = (component) => {
+    setComponent(component);
   };
 
   const handleSubmit = (values) => {
@@ -30,6 +66,9 @@ function AddModelForm({ model, onSubmit }) {
       .join("_")
       .toLowerCase()}.jpg`;
     values.services = services;
+    const conponentsArray = components.map((component) => component.mark);
+    values.components = conponentsArray;
+
     onSubmit(values);
   };
 
@@ -70,24 +109,56 @@ function AddModelForm({ model, onSubmit }) {
     // setService('');
   };
 
+  const handleAddComponent = () => {
+    setComponents((prevComponents) => {
+      return [...prevComponents, component];
+    });
+  };
+
   const deleteService = (index) => {
     setServices(services.filter((service, i) => i !== index));
   };
 
+  const deleteComponent = (index) => {
+    setComponents(components.filter((component, i) => i !== index));
+  };
+
+  const formik = useFormik({
+    initialValues: model,
+    onSubmit: handleSubmit,
+    validate: (values) => {
+      let errors = {};
+      if (!values.name) {
+        errors.name = "required";
+      }
+      return errors;
+    },
+  });
+
   return (
     <div className={styles.section}>
       <Formik
-        // validationSchema="erg"
-        initialValues={model}
-        onSubmit={handleSubmit}
+      // validationSchema="erg"
+      // initialValues={model}
+      // onSubmit={handleSubmit}
       >
-        <Form autoComplete="off" className={styles.form}>
+        <Form
+          onSubmit={formik.handleSubmit}
+          autoComplete="off"
+          className={styles.form}
+        >
           <div className={styles.fields}>
             <div className={styles.columnModelMain}>
               <div className={styles.vendorModel}>
                 <label className={styles.label}>
                   Виробник
-                  <Field className={styles.field} as="select" name="vendor">
+                  <Field
+                    className={styles.field}
+                    as="select"
+                    name="vendor"
+                    onChange={formik.handleChange}
+                    value={formik.values.vendor}
+                  >
                     <option value="" disabled hidden>
                       Виберіть виробника
                     </option>
@@ -118,6 +189,8 @@ function AddModelForm({ model, onSubmit }) {
                     className={styles.field}
                     name="model"
                     placeholder="Модель"
+                    onChange={formik.handleChange}
+                    value={formik.values.model}
                   />
                 </label>
               </div>
@@ -158,6 +231,37 @@ function AddModelForm({ model, onSubmit }) {
                   </div>
                 </div>
               </div>
+              <div className={styles.servicesBox}>
+                <span>Компоненти</span>
+                <div>
+                  <SelectService
+                    onChange={handleInputComponent}
+                    options={componentOptions}
+                  />
+                  <button type="button" onClick={handleAddComponent}>
+                    Додати
+                  </button>
+                  <div className={styles.serviceList}>
+                    {components.length !== 0 &&
+                      components.map((component, index) => {
+                        return (
+                          <div key={index}>
+                            <span>{component.mark}</span>
+
+                            <button
+                              type="button"
+                              onClick={() => {
+                                deleteComponent(index);
+                              }}
+                            >
+                              Delete
+                            </button>
+                          </div>
+                        );
+                      })}
+                  </div>
+                </div>
+              </div>
             </div>
 
             <div className={styles.columnDetails}>
@@ -167,6 +271,8 @@ function AddModelForm({ model, onSubmit }) {
                   className={styles.field}
                   name="details.type"
                   placeholder="Тип пристрою"
+                  onChange={formik.handleChange}
+                  value={formik.values.details.type}
                 />
               </label>
 
@@ -176,6 +282,8 @@ function AddModelForm({ model, onSubmit }) {
                   className={styles.field}
                   name="details.typeOfSim"
                   placeholder="Тип SIM карти"
+                  onChange={formik.handleChange}
+                  value={formik.values.details.typeOfSim}
                 />
               </label>
 
@@ -185,6 +293,8 @@ function AddModelForm({ model, onSubmit }) {
                   className={styles.field}
                   name="details.size"
                   placeholder="Розмір"
+                  onChange={formik.handleChange}
+                  value={formik.values.details.size}
                 />
               </label>
 
@@ -194,6 +304,8 @@ function AddModelForm({ model, onSubmit }) {
                   className={styles.field}
                   name="details.battery"
                   placeholder="Акумулятор"
+                  onChange={formik.handleChange}
+                  value={formik.values.details.battery}
                 />
               </label>
 
@@ -203,6 +315,8 @@ function AddModelForm({ model, onSubmit }) {
                   className={styles.field}
                   name="details.bands"
                   placeholder="Частоти"
+                  onChange={formik.handleChange}
+                  value={formik.values.details.bands}
                 />
               </label>
 
@@ -212,6 +326,8 @@ function AddModelForm({ model, onSubmit }) {
                   className={styles.field}
                   name="details.antena"
                   placeholder="Антена"
+                  onChange={formik.handleChange}
+                  value={formik.values.details.antena}
                 />
               </label>
 
@@ -221,6 +337,8 @@ function AddModelForm({ model, onSubmit }) {
                   className={styles.field}
                   name="details.wifi"
                   placeholder="Wi-Fi"
+                  onChange={formik.handleChange}
+                  value={formik.values.details.wifi}
                 />
               </label>
 
@@ -230,6 +348,8 @@ function AddModelForm({ model, onSubmit }) {
                   className={styles.field}
                   name="details.mobileNetwork"
                   placeholder="Мобільна мережа"
+                  onChange={formik.handleChange}
+                  value={formik.values.details.mobileNetwork}
                 />
               </label>
             </div>
