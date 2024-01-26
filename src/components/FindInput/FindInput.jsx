@@ -1,7 +1,7 @@
 import { TextField } from "@mui/material";
 import { useState } from "react";
 
-function FindInput({ onChange }) {
+function FindInput({ onChange, label }) {
   const [input, setInput] = useState("");
 
   function handleInput(event) {
@@ -12,7 +12,7 @@ function FindInput({ onChange }) {
   return (
     <TextField
       id="outlined-basic"
-      label="Пошук моделі"
+      label={label}
       variant="outlined"
       autoComplete="off"
       onChange={handleInput}

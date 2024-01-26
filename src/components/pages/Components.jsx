@@ -1,4 +1,3 @@
-import { Button, Grid, Paper } from "@mui/material";
 import FindInput from "../FindInput/FindInput";
 import { useEffect, useState } from "react";
 import Modal from "../Modal/Modal";
@@ -15,6 +14,8 @@ import {
 import ComponentList from "../ComponentList/ComponentList";
 import Confirm from "../Confirm/Confirm";
 import { toast } from "react-toastify";
+import ControlPanel from "../ControlPanel/ControlPanel";
+import AddElementButton from "../AddElementButton/AddElementButton";
 
 const initialComponent = {
   type: "",
@@ -201,25 +202,10 @@ function Components() {
 
   return (
     <div>
-      <Grid item xs={12} md={8} lg={9}>
-        <Paper
-          sx={{
-            p: 2,
-            display: "flex",
-            flexDirection: "row",
-            // height: 100,
-          }}
-        >
-          <FindInput onChange={setFindModel} />
-          <Button
-            onClick={handleOpenModal}
-            variant="contained"
-            sx={{ ml: "auto" }}
-          >
-            Додати компонент
-          </Button>
-        </Paper>
-      </Grid>
+      <ControlPanel>
+        <FindInput onChange={setFindModel} label="Пошук компонета" />
+        <AddElementButton onClick={handleOpenModal} label="Додати компонент" />
+      </ControlPanel>
 
       {modal && (
         <Modal onClose={handleCloseModal}>

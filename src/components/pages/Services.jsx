@@ -7,44 +7,54 @@ import { SubmitService, DeleteService } from "../../services/ServicesAPI";
 
 import Loader from "../Loader/Loader";
 import Error from "../Error/Error";
-import { Button, Grid, Paper, TextField } from "@mui/material";
+import {
+  Button,
+  Card,
+  CardActions,
+  CardContent,
+  Grid,
+  IconButton,
+  Paper,
+  TextField,
+  Typography,
+} from "@mui/material";
 import FindInput from "../FindInput/FindInput";
+import DeleteIcon from "@mui/icons-material/Delete";
+import { NavLink } from "react-router-dom";
 
 const initService = {
   page: "",
-  label: "",
-  isPage: false,
+  name: "",
 };
 
 function Services() {
   const [status, setStatus] = useState("idle");
   const [services, setServices] = useState(false);
+  const [update, setUpdate] = useState(1);
 
   useEffect(() => {
     setStatus("loading");
     GetServices()
-      .then((result) => {
-        setServices(result);
+      .then((services) => {
+        setServices(services);
         setStatus("idle");
       })
       .catch((error) => {
         console.log(error.message);
         setStatus("error");
       });
-  }, []);
+  }, [update]);
 
-  const handleSubmit = (values) => {
-    console.log(values);
-    // SubmitService(values);
+  const handleSubmit = async (values) => {
+    await SubmitService(values);
+
+    setUpdate((prevState) => prevState + 1);
   };
 
   const handleDeleteService = async (id) => {
-    DeleteService(id);
+    await DeleteService(id);
+    setUpdate((prevState) => prevState + 1);
   };
-
-  // const handleEditService = service => {
-  //   setEditService(service);
-  // };
 
   return (
     <>
@@ -66,7 +76,7 @@ function Services() {
             <Form autoComplete="off">
               <Field
                 // component={TextField}
-                name="label"
+                name="name"
                 label="Послуга"
               />
               <Field
@@ -86,34 +96,55 @@ function Services() {
         Сервісні послуги
         {status === "loading" && <Loader />}
         {status === "error" && <Error />}
-        {services &&
-          services
-            .sort((firstService, secondService) =>
-              firstService.label.localeCompare(secondService.label)
-            )
-            .map((service) => {
-              return (
-                <div>
-                  {service.label} {service.page}{" "}
-                  {/* <button
-                  onClick={() => {
-                    handleEditService(service);
-                  }}
-                  type="button"
-                >
-                  Ред
-                </button> */}
-                  <button
-                    onClick={() => {
-                      handleDeleteService(service.id);
-                    }}
-                    type="button"
-                  >
-                    Видал
-                  </button>
-                </div>
-              );
-            })}
+        <Grid container spacing={{ md: 2 }} columns={{ md: 12 }}>
+          {services &&
+            services
+              .sort((firstService, secondService) =>
+                firstService.name.localeCompare(secondService.name)
+              )
+              .map((service) => {
+                return (
+                  <Grid item md={1.5} key={service._id}>
+                    <Card>
+                      <CardContent>
+                        <NavLink to={service._id}>
+                          <Typography gutterBottom variant="p" component="div">
+                            {service.name}
+                          </Typography>
+                        </NavLink>
+
+                        <Typography gutterBottom variant="p" component="div">
+                          {service.page}
+                        </Typography>
+                      </CardContent>
+                      <CardActions disableSpacing>
+                        <IconButton
+                          onClick={() => {
+                            handleDeleteService(service._id);
+                          }}
+                          aria-label="delete"
+                          size="small"
+                        >
+                          <DeleteIcon fontSize="inherit" />
+                        </IconButton>
+                      </CardActions>
+                    </Card>
+                  </Grid>
+
+                  // <div key={service._id}>
+                  //   {service.name} {service.page}{" "}
+                  //   <button
+                  //     onClick={() => {
+                  //       handleDeleteService(service._id);
+                  //     }}
+                  //     type="button"
+                  //   >
+                  //     Видал
+                  //   </button>
+                  // </div>
+                );
+              })}
+        </Grid>
       </div>
     </>
   );

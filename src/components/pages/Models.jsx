@@ -2,11 +2,6 @@ import { useState, useEffect } from "react";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
-// import GetModels from "../../services/GetModels";
-// import SubmitModel from "../../services/SubmitModel";
-// import EditModel from "../../services/EditModel";
-// import DeleteModel from "../../services/DeleteModel";
-
 import {
   GetModels,
   SubmitModel,
@@ -28,7 +23,8 @@ import Modal from "../Modal/Modal";
 import ModalConfirm from "../ModalConfirm/ModalConfirm";
 import Confirm from "../Confirm/Confirm";
 import BackupLoader from "../BackupLoader/BackupLoader";
-import { Button, Grid, Paper } from "@mui/material";
+import ControlPanel from "../ControlPanel/ControlPanel";
+import AddElementButton from "../AddElementButton/AddElementButton";
 
 const initialModel = {
   vendor: "",
@@ -280,27 +276,12 @@ function Models() {
 
   return (
     <div>
-      <Grid item xs={12} md={8} lg={9}>
-        <Paper
-          sx={{
-            p: 2,
-            display: "flex",
-            flexDirection: "row",
-            // height: 100,
-          }}
-        >
-          <FindInput onChange={setFindModel} />
-          <Button
-            onClick={handleOpenModal}
-            variant="contained"
-            sx={{ ml: "auto" }}
-          >
-            Додати модель
-          </Button>
-          <BackUpButton getQuery={GetModels} name="Моделі" />
-          <RestoreButton onChooseBackupFile={onChooseBackupFile} />
-        </Paper>
-      </Grid>
+      <ControlPanel>
+        <FindInput onChange={setFindModel} label="Пошук моделі" />
+        <AddElementButton onClick={handleOpenModal} label="Додати модель" />
+        <BackUpButton getQuery={GetModels} name="Моделі" />
+        <RestoreButton onChooseBackupFile={onChooseBackupFile} />
+      </ControlPanel>
 
       {modal && (
         <Modal onClose={handleCloseModal}>

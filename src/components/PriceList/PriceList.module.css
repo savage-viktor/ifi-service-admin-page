@@ -1,0 +1,10 @@
+.priceList {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  width: 100%;
+}
+
+.priceList > :not(:nth-child(5)) {
+  margin-right: 20px;
+}

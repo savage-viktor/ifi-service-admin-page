@@ -84,10 +84,10 @@
 }
 
 .submitButton {
-  background-color: var(--color-accent);
-  color: var(--color-white);
+  background-color: #1d8dcd;
+  color: white;
 
-  font-family: 'Montserrat', sans-serif;
+  font-family: "Montserrat", sans-serif;
   border-radius: 78px;
   border-style: none;
   font-size: 13px;
@@ -95,9 +95,18 @@
   letter-spacing: 0em;
   line-height: 1.214;
   text-transform: uppercase;
+  cursor: pointer;
 
   width: 218px;
   height: 48px;
+
+  transition-duration: 250ms;
+  transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.submitButton:hover {
+  background-color: #4aa4d8;
+  /* transition: cubic-bezier(0.075, 0.82, 0.165, 1); */
 }
 
 .serviceList {
