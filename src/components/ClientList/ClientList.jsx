@@ -1,17 +1,17 @@
+import ClientCard from "../ClientCard/ClientCard";
+
+import styles from "./ClientList.module.css";
+
 function ClientList({ clients, onEdit, onDelete }) {
   const sortedClients = clients.sort((firstClient, secondClient) =>
     firstClient.lastName.localeCompare(secondClient.lastName)
   );
 
   return (
-    <div>
-      {sortedClients.map((client) => {
-        return (
-          <div>
-            {client.lastName} {client.firstName}
-          </div>
-        );
-      })}
+    <div className={styles.clientList}>
+      {sortedClients.map((client) => (
+        <ClientCard client={client} />
+      ))}
     </div>
   );
 }

@@ -1,0 +1,42 @@
+.container {
+  display: flex;
+  flex-direction: row;
+}
+
+.model {
+  width: 250px;
+}
+
+.modelTextField fieldset {
+  border-radius: 0px;
+  border-right-color: white;
+  /* border-right-style: dotted; */
+}
+
+.imei {
+  width: 230px;
+  border-radius: 0px;
+}
+
+.imei input + fieldset {
+  border-radius: 0px;
+  border-left-color: white;
+  border-right-color: white;
+}
+
+.imeiWarning input:valid + fieldset {
+  border: 1px solid #ffcc00;
+}
+
+.service {
+  width: 550px;
+}
+
+.complectation {
+  width: 370px;
+  height: 40px;
+}
+
+.amount {
+  width: 100px;
+}

@@ -5,3 +5,13 @@
   background-color: white;
   /* overflow-y: auto; */
 }
+
+.form {
+  display: flex;
+  flex-direction: column;
+}
+
+.comment {
+  height: 200px;
+  width: 100%;
+}

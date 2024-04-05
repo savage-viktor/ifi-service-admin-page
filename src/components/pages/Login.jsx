@@ -1,7 +1,7 @@
 // import { useSelector } from "react-redux";
 // import { getLoginStatus } from "../../redux/login/selectors";
 import { useDispatch } from "react-redux";
-import { login } from "../../redux/login/actions";
+import { login } from "../../redux/login/loginSlice";
 
 // function Login() {
 //   const isLogin = useSelector(getLoginStatus);

@@ -1,6 +1,11 @@
 import { configureStore } from "@reduxjs/toolkit";
-import { rootReducer } from "./reducer";
+import { serviceOrderReducer } from "./serviceOrder/reducer";
+import { loginReducer } from "./login/loginSlice";
+import { clientReducer } from "./serviceOrder/clientSlice";
 
 export const store = configureStore({
-  reducer: rootReducer,
+  reducer: {
+    login: loginReducer,
+    serviceOrder: serviceOrderReducer,
+  },
 });

@@ -7,20 +7,13 @@ import { SubmitService, DeleteService } from "../../services/ServicesAPI";
 
 import Loader from "../Loader/Loader";
 import Error from "../Error/Error";
-import {
-  Button,
-  Card,
-  CardActions,
-  CardContent,
-  Grid,
-  IconButton,
-  Paper,
-  TextField,
-  Typography,
-} from "@mui/material";
+import { Button, Grid } from "@mui/material";
 import FindInput from "../FindInput/FindInput";
-import DeleteIcon from "@mui/icons-material/Delete";
-import { NavLink } from "react-router-dom";
+import DashboardHeader from "../DashboardHeader/DashboardHeader";
+import ControlPanel from "../ControlPanel/ControlPanel";
+import Dashboard from "../Dashboard/Dashboard";
+import ServiceList from "../ServiceList/ServiceList";
+import SummaryPanel from "../SummaryPanel/SummaryPanel";
 
 const initService = {
   page: "",
@@ -31,6 +24,8 @@ function Services() {
   const [status, setStatus] = useState("idle");
   const [services, setServices] = useState(false);
   const [update, setUpdate] = useState(1);
+
+  const [findService, setFindService] = useState("");
 
   useEffect(() => {
     setStatus("loading");
@@ -45,6 +40,10 @@ function Services() {
       });
   }, [update]);
 
+  function handleSearch(value) {
+    setFindService(value);
+  }
+
   const handleSubmit = async (values) => {
     await SubmitService(values);
 
@@ -56,97 +55,50 @@ function Services() {
     setUpdate((prevState) => prevState + 1);
   };
 
+  const filterServices = (services) => {
+    return services.filter((service) => {
+      return service.name.toLowerCase().includes(findService);
+    });
+  };
+
   return (
-    <>
-      <Grid item xs={12} md={8} lg={9}>
-        <Paper
-          sx={{
-            p: 2,
-            display: "flex",
-            flexDirection: "row",
-            // height: 100,
-          }}
+    <Dashboard>
+      <ControlPanel>
+        <FindInput onChange={handleSearch} label="Пошук послуги" />
+        <Formik
+          // validationSchema="erg"
+          initialValues={initService}
+          onSubmit={handleSubmit}
         >
-          <FindInput onChange="" />
-          <Formik
-            // validationSchema="erg"
-            initialValues={initService}
-            onSubmit={handleSubmit}
-          >
-            <Form autoComplete="off">
-              <Field
-                // component={TextField}
-                name="name"
-                label="Послуга"
-              />
-              <Field
-                // component={TextField}
-                name="page"
-                label="Сторінка"
-              />
+          <Form autoComplete="off">
+            <Field
+              // component={TextField}
+              name="name"
+              label="Послуга"
+            />
+            <Field
+              // component={TextField}
+              name="page"
+              label="Сторінка"
+            />
 
-              <Button type="submit" variant="contained">
-                Додати послугу
-              </Button>
-            </Form>
-          </Formik>
-        </Paper>
-      </Grid>
-      <div>
-        Сервісні послуги
-        {status === "loading" && <Loader />}
-        {status === "error" && <Error />}
-        <Grid container spacing={{ md: 2 }} columns={{ md: 12 }}>
-          {services &&
-            services
-              .sort((firstService, secondService) =>
-                firstService.name.localeCompare(secondService.name)
-              )
-              .map((service) => {
-                return (
-                  <Grid item md={1.5} key={service._id}>
-                    <Card>
-                      <CardContent>
-                        <NavLink to={service._id}>
-                          <Typography gutterBottom variant="p" component="div">
-                            {service.name}
-                          </Typography>
-                        </NavLink>
-
-                        <Typography gutterBottom variant="p" component="div">
-                          {service.page}
-                        </Typography>
-                      </CardContent>
-                      <CardActions disableSpacing>
-                        <IconButton
-                          onClick={() => {
-                            handleDeleteService(service._id);
-                          }}
-                          aria-label="delete"
-                          size="small"
-                        >
-                          <DeleteIcon fontSize="inherit" />
-                        </IconButton>
-                      </CardActions>
-                    </Card>
-                  </Grid>
-
-                  // <div key={service._id}>
-                  //   {service.name} {service.page}{" "}
-                  //   <button
-                  //     onClick={() => {
-                  //       handleDeleteService(service._id);
-                  //     }}
-                  //     type="button"
-                  //   >
-                  //     Видал
-                  //   </button>
-                  // </div>
-                );
-              })}
-        </Grid>
-      </div>
-    </>
+            <Button type="submit" variant="contained">
+              Додати послугу
+            </Button>
+          </Form>
+        </Formik>
+      </ControlPanel>
+      <DashboardHeader text="Сервісні послуги" />
+      <SummaryPanel array={services ? filterServices(services) : []} />
+      {status === "loading" && <Loader />}
+      {status === "error" && <Error />}
+      {services && (
+        <ServiceList
+          services={filterServices(services)}
+          onDelete={handleDeleteService}
+        />
+      )}
+    </Dashboard>
   );
 }
 export default Services;

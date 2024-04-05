@@ -6,7 +6,7 @@ import componentTypes from "../../data/componentTypes";
 import styles from "./AddComponentForm.module.css";
 
 function AddComponentForm({ component, onSubmit }) {
-  const [selectedType, setSelectedType] = useState("");
+  const [selectedType, setSelectedType] = useState(component.type);
 
   const handleChangeType = (event) => {
     setSelectedType(event.target.value);
@@ -30,7 +30,7 @@ function AddComponentForm({ component, onSubmit }) {
         initialValues={component}
         onSubmit={handleSubmit}
       >
-        <Form autoComplete="off">
+        <Form autoComplete="off" className={styles.form}>
           <label>
             Компонент
             <Field
@@ -42,6 +42,7 @@ function AddComponentForm({ component, onSubmit }) {
               <option value="" disabled hidden>
                 Виберіть компонент
               </option>
+
               {Object.entries(componentTypes).map((type) => {
                 return <option value={type[1]}>{type[1]}</option>;
               })}
@@ -55,11 +56,6 @@ function AddComponentForm({ component, onSubmit }) {
           <p>Image - {component.image}</p>
 
           <label>
-            Коментар
-            <Field name="coment" placeholder="Коментар" />
-          </label>
-
-          <label>
             Посилання на datasheet
             <Field name="dataSheetURL" placeholder="Посилання на datasheet" />
           </label>
@@ -67,6 +63,23 @@ function AddComponentForm({ component, onSubmit }) {
           <label>
             Розмір, мм
             <Field name="size" placeholder="Розмір, мм" />
+          </label>
+
+          <label>
+            Коментар
+            <Field
+              className={styles.comment}
+              name="coment"
+              placeholder="Коментар"
+              as="textarea"
+            />
+            {/* <textarea
+              name="coment"
+              className={styles.comment}
+              cols="30"
+              rows="10"
+              placeholder="Коментар"
+            ></textarea> */}
           </label>
 
           {selectedType === componentTypes.flash && (

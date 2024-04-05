@@ -79,6 +79,16 @@ function SharedLayout(props) {
           primary="Клієнти"
           icon={<ShoppingCartIcon />}
         />
+        <ListItemLink
+          to="/orders"
+          primary="Заявки"
+          icon={<ShoppingCartIcon />}
+        />
+        <ListItemLink
+          to="/order"
+          primary="Заявка"
+          icon={<ShoppingCartIcon />}
+        />
       </List>
       <ToastContainer
         position="top-right"

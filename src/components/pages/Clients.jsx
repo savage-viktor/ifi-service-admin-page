@@ -9,6 +9,9 @@ import { toast } from "react-toastify";
 import Loader from "../Loader/Loader";
 import Error from "../Error/Error";
 import ClientList from "../ClientList/ClientList";
+import Dashboard from "../Dashboard/Dashboard";
+import DashboardHeader from "../DashboardHeader/DashboardHeader";
+import SummaryPanel from "../SummaryPanel/SummaryPanel";
 
 function Clients() {
   const [status, setStatus] = useState("idle");
@@ -79,32 +82,28 @@ function Clients() {
   };
 
   return (
-    <>
+    <Dashboard>
       <ControlPanel>
         <FindInput onChange={setFindClient} label="Пошук клієнта" />
         <AddElementButton onClick={handleOpenModal} label="Додати клієнта" />
       </ControlPanel>
-
+      <DashboardHeader text="Клієнти" />
+      <SummaryPanel array={clients ? filterClients(clients) : []} />
       {status === "loading" && <Loader />}
       {status === "error" && <Error />}
-
       {clients && (
-        <>
-          Всього {filterClients(clients).length}
-          <ClientList
-            clients={filterClients(clients)}
-            // onEdit={handleEditModel}
-            // onDelete={handleDeleteModel}
-          />
-        </>
+        <ClientList
+          clients={filterClients(clients)}
+          // onEdit={handleEditModel}
+          // onDelete={handleDeleteModel}
+        />
       )}
-
       {modal && (
         <Modal onClose={handleCloseModal}>
           <AddClientForm onSubmit={handleSubmit} />
         </Modal>
       )}
-    </>
+    </Dashboard>
   );
 }
 

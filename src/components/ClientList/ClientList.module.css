@@ -1,0 +1,10 @@
+.clientList {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  width: 100%;
+}
+
+.clientList > :not(:nth-child(5n)) {
+  margin-right: 20px;
+}

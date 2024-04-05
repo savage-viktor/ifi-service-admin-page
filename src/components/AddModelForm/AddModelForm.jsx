@@ -6,6 +6,8 @@ import SelectService from "../SelectService/SelectService";
 import styles from "./AddModelForm.module.css";
 import { useState, useEffect } from "react";
 import { GetComponents } from "../../services/ComponentsAPI";
+import { IconButton } from "@mui/material";
+import DeleteIcon from "@mui/icons-material/Delete";
 
 function AddModelForm({ model, onSubmit }) {
   // const [serviceObjects] = useState(model.services);
@@ -188,6 +190,9 @@ function AddModelForm({ model, onSubmit }) {
                   <option className={styles.option} value="Alcatel">
                     Alcatel
                   </option>
+                  <option className={styles.option} value="4Gmodule">
+                    4G Модуль
+                  </option>
                   <option className={styles.option} value="Other">
                     Інший виробник
                   </option>
@@ -204,76 +209,94 @@ function AddModelForm({ model, onSubmit }) {
                 />
               </label>
             </div>
-            <div className={styles.servicesBox}>
-              <span>Сервісні послуги</span>
-              <div>
-                <SelectService
-                  onChange={handleInputService}
-                  options={serviceOptions}
-                />
-                <button type="button" onClick={handleAddService}>
-                  Додати
-                </button>
-                <div className={styles.serviceList}>
-                  {services.length !== 0 &&
-                    services.map((service, index) => {
-                      return (
-                        <div key={service.name}>
-                          <span>{service.name}</span>
-                          <input
-                            type="checkbox"
-                            checked={service.isOnSite}
-                            onChange={handleIsOnSite}
-                            name={service.name}
-                          />
-                          <input
-                            type="checkbox"
-                            checked={service.isPage}
-                            onChange={handleIsPage}
-                            name={service.name}
-                          />
-                          <button
-                            type="button"
-                            onClick={() => {
-                              deleteService(index);
-                            }}
-                          >
-                            Delete
-                          </button>
-                        </div>
-                      );
-                    })}
+            <div className={styles.selectBox}>
+              <div className={styles.servicesBox}>
+                <span>Сервісні послуги</span>
+                <div>
+                  <SelectService
+                    onChange={handleInputService}
+                    options={serviceOptions}
+                  />
+                  <button type="button" onClick={handleAddService}>
+                    Додати
+                  </button>
+                  <div className={styles.serviceList}>
+                    {services.length !== 0 &&
+                      services.map((service, index) => {
+                        return (
+                          <div key={service.name}>
+                            <span className={styles.name}>{service.name}</span>
+                            <input
+                              className={styles.checkboxOnSite}
+                              type="checkbox"
+                              checked={service.isOnSite}
+                              onChange={handleIsOnSite}
+                              name={service.name}
+                            />
+                            <input
+                              type="checkbox"
+                              checked={service.isPage}
+                              onChange={handleIsPage}
+                              name={service.name}
+                            />
+                            <div className={styles.icon}>
+                              <IconButton
+                                onClick={() => {
+                                  deleteService(index);
+                                }}
+                                aria-label="delete"
+                                size="small"
+                              >
+                                <DeleteIcon fontSize="inherit" />
+                              </IconButton>
+                            </div>
+                          </div>
+                        );
+                      })}
+                  </div>
                 </div>
               </div>
-            </div>
-            <div className={styles.servicesBox}>
-              <span>Компоненти</span>
-              <div>
-                <SelectService
-                  onChange={handleInputComponent}
-                  options={componentOptions}
-                />
-                <button type="button" onClick={handleAddComponent}>
-                  Додати
-                </button>
-                <div className={styles.serviceList}>
-                  {components.length !== 0 &&
-                    components.map((component, index) => {
-                      return (
-                        <div key={index}>
-                          <span>{component.mark}</span>
+              <div className={styles.servicesBox}>
+                <span>Компоненти</span>
+                <div>
+                  <SelectService
+                    onChange={handleInputComponent}
+                    options={componentOptions}
+                  />
+                  <button type="button" onClick={handleAddComponent}>
+                    Додати
+                  </button>
+                  <div className={styles.serviceList}>
+                    {components.length !== 0 &&
+                      components.map((component, index) => {
+                        return (
+                          <div key={index}>
+                            <span>{component.mark}</span>
 
-                          <button
-                            type="button"
-                            onClick={() => {
-                              deleteComponent(index);
-                            }}
-                          >
-                            Delete
-                          </button>
-                        </div>
-                      );
-                    })}
+                            <div className={styles.icon}>
+                              <IconButton
+                                onClick={() => {
+                                  deleteComponent(index);
+                                }}
+                                aria-label="delete"
+                                size="small"
+                              >
+                                <DeleteIcon fontSize="inherit" />
+                              </IconButton>
+                            </div>
+
+                            {/* <button
+                              type="button"
+                              onClick={() => {
+                                deleteComponent(index);
+                              }}
+                            >
+                              Delete
+                            </button> */}
+                          </div>
+                        );
+                      })}
+                  </div>
                 </div>
               </div>
             </div>

@@ -39,7 +39,7 @@ function Components() {
   const [modalConfirmText, setModalConfirmText] = useState("");
   const [modalConfirmType, setModalConfirmType] = useState("");
   const [deleteId, setDeleteId] = useState("");
-  const [findModel, setFindModel] = useState("");
+  const [findComponent, setFindComponent] = useState("");
   const [restoreFile, setRestoreFile] = useState(null);
   const [loaderCount, setLoaderCount] = useState(0);
   const [breakRestore, setBreakRestore] = useState(false);
@@ -200,10 +200,19 @@ function Components() {
     setModalConfirm(true);
   };
 
+  const filterComponents = (components) => {
+    return components.filter((component) => {
+      return (
+        component.mark.toLowerCase().includes(findComponent) ||
+        component.coment.toLowerCase().includes(findComponent)
+      );
+    });
+  };
+
   return (
     <div>
       <ControlPanel>
-        <FindInput onChange={setFindModel} label="Пошук компонета" />
+        <FindInput onChange={setFindComponent} label="Пошук компонета" />
         <AddElementButton onClick={handleOpenModal} label="Додати компонент" />
       </ControlPanel>
 
@@ -241,9 +250,9 @@ function Components() {
 
       {components && (
         <>
-          Всього {components.length}
+          Всього {filterComponents(components).length}
           <ComponentList
-            components={components}
+            components={filterComponents(components)}
             onEdit={handleEditModel}
             onDelete={handleDeleteModel}
           />

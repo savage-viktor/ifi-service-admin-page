@@ -1,0 +1,10 @@
+.serviceList {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  width: 100%;
+}
+
+.serviceList > :not(:nth-child(4n)) {
+  margin-right: 20px;
+}

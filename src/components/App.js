@@ -13,14 +13,19 @@ import { getLoginStatus } from "../redux/login/selectors";
 import Components from "./pages/Components";
 import Shop from "./pages/Shop";
 import Clients from "./pages/Clients";
+import Orders from "./pages/Orders";
+import Order from "./pages/Order";
 
 function App() {
-  const isLogin = useSelector(getLoginStatus);
+  // const { isLogin } = useSelector(getLoginStatus);
+  const isLogin = true;
 
   return (
     <Routes>
       <Route path="/" element={isLogin ? <SharedLayout /> : <Login />}>
         <Route index element={<Models />} />
+        <Route path="orders" element={<Orders />} />
+        <Route path="order" element={<Order />} />
         <Route path="services" element={<Services />} />
         <Route path="services/:serviceId" element={<Service />} />
         <Route path="messages" element={<Messages />} />

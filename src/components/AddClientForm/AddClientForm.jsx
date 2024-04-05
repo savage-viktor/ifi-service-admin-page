@@ -5,6 +5,7 @@ const initClient = {
   firstName: "",
   lastName: "",
   city: "",
+  phone: "",
 };
 
 function AddClientForm({ onSubmit }) {
@@ -44,6 +45,15 @@ function AddClientForm({ onSubmit }) {
           onChange={formik.handleChange}
           value={formik.city}
           name="city"
+          type="text"
+        />
+      </label>
+      <label>
+        Номер
+        <input
+          onChange={formik.handleChange}
+          value={formik.phone}
+          name="phone"
           type="text"
         />
       </label>

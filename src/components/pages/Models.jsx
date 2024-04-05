@@ -263,7 +263,10 @@ function Models() {
 
   const filterModels = (models) => {
     return models.filter((model) => {
-      return model.model.toLowerCase().includes(findModel);
+      return (
+        model.model.toLowerCase().includes(findModel) ||
+        model.components.join(" ").toLowerCase().includes(findModel)
+      );
     });
   };
 
