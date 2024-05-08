@@ -1,26 +1,33 @@
 import { createSlice } from "@reduxjs/toolkit";
+import dayjs from "dayjs";
 
 export const incomeInitialState = {
   logisticType: "remote",
   invoiceNumber: "",
   invoicePrice: "",
   comment: "",
-  date: undefined,
+  date: dayjs(undefined).format("MM.DD.YYYY"),
 };
 
 const incomeSlice = createSlice({
   name: "serviceOrder/income",
   initialState: incomeInitialState,
   reducers: {
-    setIncome(state, action) {
-      state.invoiceNumber = action.payload.invoiceNumber;
-      state.invoicePrice = action.payload.invoicePrice;
-      state.comment = action.payload.comment;
-      state.date = action.payload.date;
-      state.logisticType = action.payload.logisticType;
+    setIncomeType(state, action) {
+      state.invoiceNumber = "";
+      state.invoicePrice = "";
+
+      state.logisticType = action.payload;
+    },
+    setInput(state, action) {
+      state[action.payload.name] = action.payload.value;
+    },
+    setDate(state, action) {
+      state.date = action.payload;
     },
   },
 });
 
-export const { setIncome } = incomeSlice.actions;
+export const { setRemoteType, setIncomeType, setInput, setDate } =
+  incomeSlice.actions;
 export const incomeReducer = incomeSlice.reducer;

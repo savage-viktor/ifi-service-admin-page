@@ -22,7 +22,6 @@ function Order(params) {
 
     Promise.all([GetClients(), GetModels(), GetServices()])
       .then((value) => {
-        console.log(value);
         setClients(value[0]);
         setModels(value[1]);
         setServices(value[2]);

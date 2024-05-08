@@ -1,6 +1,6 @@
 import { Autocomplete, Button, TextField } from "@mui/material";
 import styles from "./OrderPaymentForm.module.css";
-import React, { useEffect, useState } from "react";
+import React from "react";
 
 import { NumericFormat } from "react-number-format";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
@@ -10,6 +10,13 @@ import "dayjs/locale/uk";
 import dayjs from "dayjs";
 import OrderPaymentList from "../OrderPaymentList/OrderPaymentList";
 import { useFormik } from "formik";
+
+import { getInitPayments } from "../../redux/serviceOrder/selectors";
+import { useDispatch, useSelector } from "react-redux";
+import {
+  addPayment,
+  deletePayment,
+} from "../../redux/serviceOrder/paymentsSlice";
 
 const paymentTypeOptions = ["ПриватБанк", "МоноБанк", "Готівка"];
 
@@ -41,7 +48,7 @@ const AmountInputCustom = React.forwardRef(function InvoicePriceInputCustom(
 
 const initPayment = {
   amount: "",
-  date: dayjs(new Date()),
+  date: dayjs(undefined).format("MM.DD.YYYY"),
   paymentType: null,
 };
 
@@ -57,20 +64,18 @@ const calculateAmount = (payments) => {
   }
 };
 
-const OrderPaymentForm = ({ initPayments, onChange }) => {
-  const [payments, setPayments] = useState(initPayments);
+const OrderPaymentForm = () => {
+  const dispatch = useDispatch();
 
-  useEffect(() => {
-    onChange(payments);
-  }, [onChange, payments]);
+  const payments = useSelector(getInitPayments);
 
   const handleSubmit = (values, { resetForm }) => {
-    setPayments((prev) => [...prev, values]);
+    dispatch(addPayment(values));
     resetForm();
   };
 
   const onDeletePayment = (index) => {
-    setPayments(payments.filter((payment, i) => i !== index));
+    dispatch(deletePayment(index));
   };
 
   const formik = useFormik({
@@ -99,14 +104,14 @@ const OrderPaymentForm = ({ initPayments, onChange }) => {
           <LocalizationProvider dateAdapter={AdapterDayjs} adapterLocale="uk">
             <DatePicker
               className={styles.date}
-              value={formik.values.date}
+              value={dayjs(formik.values.date)}
               name="date"
               label="Дата"
               slotProps={{ textField: { size: "small", required: true } }}
               autoComplete="off"
               size="small"
               onChange={(value) => {
-                formik.setFieldValue("date", value);
+                formik.setFieldValue("date", dayjs(value).format("MM.DD.YYYY"));
               }}
             />
           </LocalizationProvider>

@@ -21,30 +21,29 @@ const OrderPaymentList = ({ payments, onDelete }) => {
   return (
     <div>
       <Table>
-        <TableBody>
+        <TableBody className={styles.tableRow}>
           {payments.map((payment, index) => (
-            <div className={styles.tableRow}>
-              <TableRow
-                sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
-              >
-                <TableCell component="th" scope="row">
-                  {payment.amount} грн
-                </TableCell>
-                <TableCell align="right">
-                  {transformDate(payment.date)}
-                </TableCell>
-                <TableCell align="right">{payment.paymentType}</TableCell>
-              </TableRow>
-              <IconButton
-                onClick={() => {
-                  onDelete(index);
-                }}
-                aria-label="delete"
-                size="small"
-              >
-                <DeleteIcon fontSize="inherit" />
-              </IconButton>
-            </div>
+            <TableRow
+              key={index}
+              sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
+            >
+              <TableCell component="th" scope="row">
+                {payment.amount} грн
+              </TableCell>
+              <TableCell align="right">{transformDate(payment.date)}</TableCell>
+              <TableCell align="right">{payment.paymentType}</TableCell>
+              <TableCell align="right">
+                <IconButton
+                  onClick={() => {
+                    onDelete(index);
+                  }}
+                  aria-label="delete"
+                  size="small"
+                >
+                  <DeleteIcon fontSize="inherit" />
+                </IconButton>
+              </TableCell>
+            </TableRow>
           ))}
         </TableBody>
       </Table>

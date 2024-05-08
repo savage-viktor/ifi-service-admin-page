@@ -1,0 +1,19 @@
+.invoiceBox {
+  width: 100%;
+  display: flex;
+  flex-direction: row;
+}
+
+.invoiceNumber {
+  width: 160px;
+  margin-right: 10px !important;
+}
+
+.invoicePriceWarning input:valid + fieldset {
+  /* border-color: rgb(240, 179, 13); */
+  border: 1px solid #ffcc00;
+}
+
+.invoicePrice {
+  width: 150px;
+}

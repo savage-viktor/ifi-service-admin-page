@@ -1,0 +1,14 @@
+.dateBox {
+  width: 100%;
+  display: flex;
+  flex-direction: row;
+}
+
+.comment {
+  width: 160px;
+  margin-right: 10px !important;
+}
+
+.date {
+  width: 150px;
+}

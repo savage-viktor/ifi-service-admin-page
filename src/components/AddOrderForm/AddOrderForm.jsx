@@ -5,23 +5,14 @@ import OrderPaymentForm from "../OrderPaymentForm/OrderPaymentForm";
 import OrderDevicesList from "../OrderDevicesList/OrderDevicesList";
 import OrderIncomeForm from "../OrderIncomeForm/OrderIncomeForm";
 import OrderOutcomeForm from "../OrderOutcomeForm/OrderOutcomeForm";
-
-const initPayments = [];
-
-const items = [
-  {
-    model: "",
-    imei: "",
-    innerImei: "",
-    services: [],
-    complectation: [],
-    price: "",
-  },
-];
+import { useSelector } from "react-redux";
+import { getServiceOrder } from "../../redux/serviceOrder/selectors";
 
 const AddOrderForm = ({ clients, models, services }) => {
-  const handleChangePayment = (payments) => {
-    // console.log(payments);
+  const order = useSelector(getServiceOrder);
+
+  const handleSubmit = () => {
+    console.log(order);
   };
 
   return (
@@ -30,12 +21,10 @@ const AddOrderForm = ({ clients, models, services }) => {
         <OrderClientForm clients={clients} />
         <OrderIncomeForm />
         <OrderOutcomeForm />
-        <OrderPaymentForm
-          onChange={handleChangePayment}
-          initPayments={initPayments}
-        />
+        <OrderPaymentForm />
       </div>
-      <OrderDevicesList items={items} models={models} services={services} />
+      <OrderDevicesList models={models} services={services} />
+      <button onClick={handleSubmit}>Зберегти</button>
     </div>
   );
 };
