@@ -14,6 +14,10 @@ const clientSlice = createSlice({
   name: "serviceOrder/client",
   initialState: clientInitialState,
   reducers: {
+    setClient(state, action) {
+      return action.payload;
+    },
+
     setInput(state, action) {
       state[action.payload.name] = action.payload.value;
     },
@@ -59,6 +63,7 @@ const clientSlice = createSlice({
 });
 
 export const {
+  setClient,
   setInput,
   checkDropshipper,
   changeClientType,

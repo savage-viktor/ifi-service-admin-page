@@ -8,7 +8,7 @@ import {
 import { createFilterOptions } from "@mui/material/Autocomplete";
 
 import styles from "./OrderDeviceItem.module.css";
-import React from "react";
+import React, { useState } from "react";
 import { NumericFormat } from "react-number-format";
 
 import CheckBoxOutlineBlankIcon from "@mui/icons-material/CheckBoxOutlineBlank";
@@ -23,6 +23,7 @@ import {
   setDeviceComplectation,
   setDeviceAmount,
   clearDevice,
+  setDeviceImeiInner,
 } from "../../redux/serviceOrder/devicesSlice";
 import { getInitClient } from "../../redux/serviceOrder/selectors";
 
@@ -39,6 +40,7 @@ const InvoiceNumberInputCustom = React.forwardRef(
       <NumericFormat
         {...other}
         getInputRef={ref}
+        allowLeadingZeros
         onValueChange={(values) => {
           onChange({
             target: {
@@ -90,6 +92,8 @@ const AmountInputCustom = React.forwardRef(function InvoicePriceInputCustom(
 });
 
 const OrderDeviceItem = ({ models, services, device, onDelete, index }) => {
+  const [isDifferentIMEIs, setisDifferentIMEIs] = useState(false);
+
   const dispatch = useDispatch();
 
   const client = useSelector(getInitClient);
@@ -166,6 +170,25 @@ const OrderDeviceItem = ({ models, services, device, onDelete, index }) => {
     );
   };
 
+  const onChangeImeiInner = (e) => {
+    dispatch(
+      setDeviceImeiInner({
+        id: device.id,
+        value: e.target.value,
+      })
+    );
+  };
+
+  const onCheckIMEI = (e) => {
+    setisDifferentIMEIs(e.target.checked);
+    dispatch(
+      setDeviceImeiInner({
+        id: device.id,
+        value: "",
+      })
+    );
+  };
+
   const onChangeService = (e, value) => {
     dispatch(
       setDeviceService({
@@ -202,109 +225,145 @@ const OrderDeviceItem = ({ models, services, device, onDelete, index }) => {
 
   return (
     <div className={styles.container}>
-      <Autocomplete
-        className={styles.model}
-        popupIcon={null}
-        options={models.map((model) => model.model)}
-        onChange={onChangeModel}
-        filterOptions={(options, params) => {
-          const filtered = filter(options, params);
-          const { inputValue } = params;
-          const isExisting = options.some((option) => inputValue === option);
-          if (inputValue !== "" && !isExisting) {
-            filtered.push(inputValue);
-          }
+      <div className={styles.row}>
+        <Autocomplete
+          className={styles.model}
+          popupIcon={null}
+          options={models.map((model) => model.model)}
+          onChange={onChangeModel}
+          filterOptions={(options, params) => {
+            const filtered = filter(options, params);
+            const { inputValue } = params;
+            const isExisting = options.some((option) => inputValue === option);
+            if (inputValue !== "" && !isExisting) {
+              filtered.push(inputValue);
+            }
 
-          return filtered;
-        }}
-        value={device.model}
-        renderInput={(params) => (
-          <TextField className={styles.modelTextField} required {...params} />
-        )}
-        size="small"
-        freeSolo
-        noOptionsText={"Не знайдено"}
-      />
+            return filtered;
+          }}
+          value={device.model}
+          renderInput={(params) => (
+            <TextField className={styles.modelTextField} required {...params} />
+          )}
+          size="small"
+          freeSolo
+          noOptionsText={"Не знайдено"}
+        />
 
-      <TextField
-        className={`${styles.imei} ${
-          (device.imei.length !== 15) & (device.imei.length > 0)
-            ? styles.imeiWarning
-            : ""
-        }`}
-        name="imei"
-        autoComplete="off"
-        onChange={onChangeImei}
-        value={device.imei}
-        size="small"
-        InputProps={{
-          inputComponent: InvoiceNumberInputCustom,
-          endAdornment: (
-            <InputAdornment position="end">
-              <Checkbox icon={icon} checkedIcon={checkedIcon} />
-            </InputAdornment>
-          ),
-        }}
-      />
-
-      <Autocomplete
-        className={styles.service}
-        popupIcon={null}
-        options={makeServiceOptions(device.model, services)}
-        onChange={onChangeService}
-        value={device.service}
-        renderInput={(params) => <TextField required {...params} />}
-        size="small"
-        noOptionsText={"Не знайдено"}
-        isOptionEqualToValue={(option, value) => {
-          return option.label === value.label || option.label === value;
-        }}
-      />
-
-      <Autocomplete
-        className={styles.complectation}
-        onChange={onChangeComplectation}
-        multiple
-        popupIcon={null}
-        options={complectationOptions}
-        disableCloseOnSelect
-        renderOption={(props, option, { selected }) => (
-          <li {...props}>
-            <Checkbox
-              icon={icon}
-              checkedIcon={checkedIcon}
-              style={{ marginRight: 8 }}
-              checked={selected}
+        <div className={styles.imeiBox}>
+          <TextField
+            className={`${styles.imei} ${
+              (device.imei.length !== 15) & (device.imei.length > 0)
+                ? styles.imeiWarning
+                : ""
+            }`}
+            name="imei"
+            autoComplete="off"
+            onChange={onChangeImei}
+            value={device.imei}
+            size="small"
+            InputProps={{
+              inputComponent: InvoiceNumberInputCustom,
+              endAdornment: (
+                <InputAdornment position="end">
+                  <Checkbox
+                    className={styles.imeiCheckBox}
+                    icon={icon}
+                    checked={isDifferentIMEIs}
+                    checkedIcon={checkedIcon}
+                    onChange={onCheckIMEI}
+                  />
+                </InputAdornment>
+              ),
+            }}
+          />
+          {isDifferentIMEIs && (
+            <TextField
+              className={`${styles.imei} ${
+                (device.imeiInner.length !== 15) & (device.imeiInner.length > 0)
+                  ? styles.imeiWarning
+                  : ""
+              }`}
+              name="imeiInner"
+              autoComplete="off"
+              onChange={onChangeImeiInner}
+              value={device.imeiInner}
+              size="small"
+              InputProps={InvoiceNumberInputCustom}
             />
-            {option}
-          </li>
-        )}
-        renderInput={(params) => <TextField {...params} />}
-        size="small"
-        noOptionsText={"Не знайдено"}
-      />
+          )}
+        </div>
 
-      <TextField
-        className={styles.amount}
-        name="amount"
-        autoComplete="off"
-        onChange={onChangeAmount}
-        value={device.amount}
-        size="small"
-        InputProps={{
-          inputComponent: AmountInputCustom,
-        }}
-      />
+        <Autocomplete
+          className={styles.service}
+          popupIcon={null}
+          options={makeServiceOptions(device.model, services)}
+          onChange={onChangeService}
+          value={device.service}
+          renderInput={(params) => (
+            <TextField
+              className={styles.serviceTextField}
+              required
+              {...params}
+            />
+          )}
+          size="small"
+          noOptionsText={"Не знайдено"}
+          isOptionEqualToValue={(option, value) => {
+            return option.label === value.label || option.label === value;
+          }}
+        />
 
-      <IconButton
-        onClick={() => {
-          onDelete(index);
-        }}
-        aria-label="delete"
-        size="small"
-      >
-        <DeleteIcon fontSize="inherit" />
-      </IconButton>
+        <Autocomplete
+          className={styles.complectation}
+          onChange={onChangeComplectation}
+          value={device.complectation}
+          multiple
+          popupIcon={null}
+          options={complectationOptions}
+          disableCloseOnSelect
+          renderOption={(props, option, { selected }) => (
+            <li {...props}>
+              <Checkbox
+                icon={icon}
+                checkedIcon={checkedIcon}
+                style={{ marginRight: 8 }}
+                checked={selected}
+              />
+              {option}
+            </li>
+          )}
+          renderInput={(params) => (
+            <TextField className={styles.complectationTextField} {...params} />
+          )}
+          size="small"
+          noOptionsText={"Не знайдено"}
+        />
+
+        <TextField
+          className={styles.amount}
+          name="amount"
+          autoComplete="off"
+          onChange={onChangeAmount}
+          value={device.amount}
+          size="small"
+          InputProps={{
+            inputComponent: AmountInputCustom,
+          }}
+        />
+      </div>
+
+      <div className={styles.icon}>
+        <IconButton
+          onClick={() => {
+            onDelete(index);
+          }}
+          aria-label="delete"
+          size="small"
+        >
+          <DeleteIcon fontSize="inherit" />
+        </IconButton>
+      </div>
     </div>
   );
 };

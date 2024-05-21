@@ -13,6 +13,10 @@ const incomeSlice = createSlice({
   name: "serviceOrder/income",
   initialState: incomeInitialState,
   reducers: {
+    setIncome(state, action) {
+      return action.payload;
+    },
+
     setIncomeType(state, action) {
       state.invoiceNumber = "";
       state.invoicePrice = "";
@@ -28,6 +32,6 @@ const incomeSlice = createSlice({
   },
 });
 
-export const { setRemoteType, setIncomeType, setInput, setDate } =
+export const { setIncome, setRemoteType, setIncomeType, setInput, setDate } =
   incomeSlice.actions;
 export const incomeReducer = incomeSlice.reducer;

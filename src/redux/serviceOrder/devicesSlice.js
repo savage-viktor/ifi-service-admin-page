@@ -7,6 +7,7 @@ export const devicesInitialState = [
     imei: "",
     imeiInner: "",
     service: null,
+    comment: "",
     complectation: [],
     amount: "0",
   },
@@ -16,16 +17,24 @@ const devicesSlice = createSlice({
   name: "serviceOrder/devices",
   initialState: devicesInitialState,
   reducers: {
+    setDevices(state, action) {
+      return action.payload;
+    },
+
     addDevice(state, action) {
-      state.push({
-        id: nanoid(),
-        model: null,
-        imei: "",
-        imeiInner: "",
-        service: "",
-        complectation: [],
-        amount: "0",
-      });
+      for (let i = 0; i < action.payload; i++) {
+        state.push({
+          id: nanoid(),
+          model: state.length ? state[state.length - 1].model : null,
+          imei: "",
+          imeiInner: "",
+          service: state.length ? state[state.length - 1].service : "",
+          complectation: state.length
+            ? state[state.length - 1].complectation
+            : [],
+          amount: state.length ? state[state.length - 1].amount : "0",
+        });
+      }
     },
 
     clearDevice(state, action) {
@@ -62,6 +71,15 @@ const devicesSlice = createSlice({
       });
     },
 
+    setDeviceImeiInner(state, action) {
+      state.map((device) => {
+        if (device.id === action.payload.id) {
+          device.imeiInner = action.payload.value;
+        }
+        return device;
+      });
+    },
+
     setDeviceService(state, action) {
       state.map((device) => {
         if (device.id === action.payload.id) {
@@ -88,17 +106,31 @@ const devicesSlice = createSlice({
         return device;
       });
     },
+
+    setDeviceImeiArray(state, action) {
+      let qwerty = action.payload.split("\n");
+
+      state.map((device, index) => {
+        if (qwerty[index]) {
+          console.log(qwerty[index]);
+          device.imei = qwerty[index];
+        }
+      });
+    },
   },
 });
 
 export const {
+  setDevices,
   addDevice,
   clearDevice,
   deleteDevice,
   setDeviceModel,
   setDeviceImei,
+  setDeviceImeiInner,
   setDeviceService,
   setDeviceComplectation,
   setDeviceAmount,
+  setDeviceImeiArray,
 } = devicesSlice.actions;
 export const devicesReducer = devicesSlice.reducer;

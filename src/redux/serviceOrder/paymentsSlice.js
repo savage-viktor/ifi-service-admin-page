@@ -6,6 +6,10 @@ const paymentsSlice = createSlice({
   name: "serviceOrder/payments",
   initialState: paymentsInitialState,
   reducers: {
+    setPayments(state, action) {
+      return action.payload;
+    },
+
     addPayment(state, action) {
       state.push(action.payload);
     },
@@ -15,5 +19,5 @@ const paymentsSlice = createSlice({
   },
 });
 
-export const { addPayment, deletePayment } = paymentsSlice.actions;
+export const { setPayments, addPayment, deletePayment } = paymentsSlice.actions;
 export const paymentsReducer = paymentsSlice.reducer;

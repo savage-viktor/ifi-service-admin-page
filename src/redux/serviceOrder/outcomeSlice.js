@@ -13,6 +13,10 @@ const outcomeSlice = createSlice({
   name: "serviceOrder/outcome",
   initialState: outcomeInitialState,
   reducers: {
+    setOutcome(state, action) {
+      return action.payload;
+    },
+
     setOutcomeType(state, action) {
       state.invoiceNumber = "";
       state.invoicePrice = "";
@@ -30,6 +34,11 @@ const outcomeSlice = createSlice({
   },
 });
 
-export const { setOutcomeRemote, setOutcomeType, setInput, setDate } =
-  outcomeSlice.actions;
+export const {
+  setOutcome,
+  setOutcomeRemote,
+  setOutcomeType,
+  setInput,
+  setDate,
+} = outcomeSlice.actions;
 export const outcomeReducer = outcomeSlice.reducer;

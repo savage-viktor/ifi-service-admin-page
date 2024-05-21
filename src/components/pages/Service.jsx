@@ -60,6 +60,7 @@ function Service() {
   };
 
   const handleEditPrice = (price) => {
+    console.log(price);
     // setModel(model);
     // setModalConfirmType("edit");
     // setModal(true);

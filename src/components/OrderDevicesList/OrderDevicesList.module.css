@@ -7,4 +7,26 @@
 
   border-radius: 10px;
   box-shadow: 0px 1.7611111403px 17px 0px rgba(19, 18, 66, 0.0705882353);
+  margin-bottom: 10px;
+  display: flex;
+  flex-direction: column;
+}
+
+.panelBox {
+  display: flex;
+  flex-direction: row;
+  margin-bottom: 10px;
+
+  & :first-child {
+    margin-left: auto;
+  }
+}
+
+.addDeviceBtn {
+  margin-left: 10px;
+}
+
+.totalBox {
+  margin-left: auto;
+  margin-bottom: 10px;
 }

@@ -8,6 +8,8 @@ import Loader from "../Loader/Loader";
 import Error from "../Error/Error";
 import { GetModels } from "../../services/ModelsAPI";
 import { GetServices } from "../../services/ServicesAPI";
+import { useSelector } from "react-redux";
+import { getServiceOrder } from "../../redux/serviceOrder/selectors";
 
 function Order(params) {
   const [status, setStatus] = useState("idle");
@@ -16,6 +18,8 @@ function Order(params) {
   const [services, setServices] = useState(false);
 
   const [update, setUpdate] = useState(1);
+
+  const { orderNumber } = useSelector(getServiceOrder);
 
   useEffect(() => {
     setStatus("loading");
@@ -35,7 +39,9 @@ function Order(params) {
 
   return (
     <Dashboard>
-      <DashboardHeader text="Заявка на сервісні послуги" />
+      <DashboardHeader
+        text={`Заявка на сервісні послуги ${orderNumber ? orderNumber : ""}`}
+      />
       {status === "loading" && <Loader />}
       {status === "error" && <Error />}
       {clients && (

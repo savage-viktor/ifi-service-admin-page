@@ -1,42 +1,157 @@
 .container {
   display: flex;
+  /* display: inline-block; */
   flex-direction: row;
+  margin-bottom: 5px;
+}
+
+.row {
+  display: flex;
+  /* display: inline-block; */
+  flex-direction: row;
+
+  border: 1px solid rgb(118, 118, 118);
+  border-radius: 6px;
+}
+
+.container:hover {
+  .icon {
+    opacity: 1;
+    transition: opacity 150ms ease-in-out;
+  }
 }
 
 .model {
   width: 250px;
 }
 
+.modelTextField {
+  height: 100%;
+}
+
+.modelTextField > div {
+  height: 100%;
+}
+
 .modelTextField fieldset {
+  /* box-sizing: border-box; */
   border-radius: 0px;
   border-right-color: white;
+  border-top-left-radius: 5px;
+  border-bottom-left-radius: 5px;
+
+  border-color: white;
+
   /* border-right-style: dotted; */
+  /* height: 100%; */
+}
+
+.imeiBox {
+  width: 230px;
+  display: flex;
+  flex-direction: column;
+}
+
+.imeiBox:hover {
+  .imeiCheckBox {
+    opacity: 1;
+    transition: opacity 150ms ease-in-out;
+  }
 }
 
 .imei {
-  width: 230px;
+  width: 100%;
   border-radius: 0px;
+  height: 100%;
 }
 
-.imei input + fieldset {
+.imei > div {
+  height: 100%;
+}
+
+.imei fieldset {
   border-radius: 0px;
   border-left-color: white;
   border-right-color: white;
+  border-color: white;
 }
 
 .imeiWarning input:valid + fieldset {
   border: 1px solid #ffcc00;
 }
 
+.imeiWarning input:valid + div + fieldset {
+  border: 1px solid #ffcc00;
+}
+
+.imeiCheckBox {
+  /* align-self: flex-end; */
+  opacity: 0;
+
+  transition: opacity 150ms ease-in-out;
+}
+
 .service {
   width: 550px;
 }
 
+.serviceTextField {
+  height: 100%;
+}
+
+.serviceTextField > div {
+  height: 100%;
+}
+
+.serviceTextField fieldset {
+  border-radius: 0px;
+  border-right-color: white;
+  border-left-color: white;
+  border-color: white;
+}
+
 .complectation {
   width: 370px;
-  height: 40px;
+  /* height: 40px; */
+}
+
+.complectation fieldset {
+  border-radius: 0px;
+  /* border-right-color: white; */
+  border-left-color: white;
+  border-color: white;
+}
+
+.complectationTextField {
+  height: 100%;
+}
+
+.complectationTextField > div {
+  height: 100%;
 }
 
 .amount {
   width: 100px;
+  border-radius: 0px;
+}
+
+.amount > div {
+  height: 100%;
+}
+
+.amount fieldset {
+  border-radius: 0px;
+  border-left-color: white;
+
+  border-top-right-radius: 5px;
+  border-bottom-right-radius: 5px;
+  border-color: white;
+}
+
+.icon {
+  /* align-self: flex-end; */
+  align-self: center;
+  opacity: 0;
+
+  transition: opacity 150ms ease-in-out;
 }

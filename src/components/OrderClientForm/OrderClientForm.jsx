@@ -63,7 +63,7 @@ const OrderClientForm = ({ clients }) => {
 
   const [clientOptions] = useState(makeClientOptions(clients));
   const [activeClientOption, setActiveClientOption] = useState(
-    makeDefaultOption(clientOptions, firstName)
+    makeDefaultOption(clientOptions, firstName, lastName)
   );
 
   const dispatch = useDispatch();
